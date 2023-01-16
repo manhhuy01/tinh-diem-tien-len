@@ -20,6 +20,8 @@
   flex-direction: column;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding: 20px;
+  padding-bottom: 60px;
 }
 
 .App-link {
@@ -35,12 +37,78 @@
 .table-score {
   width: 100%;
 }
+
+.table-score thead {
+  font-size: 20px;
+}
+
 .menu {
   margin-bottom: 20px;
 }
 .popup-overlay .popup-content {
   margin-top: 24px !important;
-  background-color: gray;
-  padding: 16px;
   text-align: center;
+  width: 100%;
+}
+.input-score{
+  color: black;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-score input {
+  width: 40px;
+}
+
+input {
+  font-size: 28px;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: solid 1px black;
+  margin: auto;
+}
+
+.button__increase {
+  margin: 0px 8px;
+  color: red;
+  cursor: pointer;
+  font-size: 40px;
+}
+
+.button__descrease {
+  margin: 0px 8px;
+  color: green;
+  cursor: pointer;
+  font-size: 40px;
+}
+
+.button {
+  height: 40px;
+  border-radius: 4px;
+  font-size: 20px;
+  background-color: yellow;
+}
+
+.action {
+  display: flex;
+}
+
+.score--total {
+  color: yellow;
+  font-size: 32px;
+}
+
+.button--float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }

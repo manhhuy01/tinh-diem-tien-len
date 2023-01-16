@@ -25,27 +25,27 @@ function App() {
     setIsSetScore(false);
   }
   const setScorePlayer = ({ player, value }) => {
-    score[player] = Number.isNaN(value) ? '-' : +value;
+    score[player] = Number.isInteger(+value) ? +value : '-';
     setScore(score);
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     const players = JSON.parse(localStorage.getItem('players') || '[]');
     const handScores = JSON.parse(localStorage.getItem('handScores') || '[]');
     const totalScore = JSON.parse(localStorage.getItem('totalScore') || '{}');
     setPlayers(players);
     setHandScores(handScores);
     setTotalScore(totalScore);
-  },[])
+  }, [])
 
   useEffect(() => {
-    let newTotalScore = players.reduce((agg,player) => {
+    let newTotalScore = players.reduce((agg, player) => {
       agg[player] = 0;
       return agg;
-    },{})
-    handScores.forEach(handScore=> {
+    }, {})
+    handScores.forEach(handScore => {
       Object.keys(handScore).forEach(player => {
-        if(+handScore[player]){
+        if (+handScore[player]) {
           newTotalScore[player] += handScore[player]
         }
       })
@@ -53,39 +53,43 @@ function App() {
     setTotalScore(newTotalScore)
   }, [handScores, players])
 
-  useEffect(()=> {
+  useEffect(() => {
     localStorage.setItem('players', JSON.stringify(players))
     localStorage.setItem('handScores', JSON.stringify(handScores))
     localStorage.setItem('totalScore', JSON.stringify(totalScore))
-  },[players, handScores, totalScore])
+  }, [players, handScores, totalScore])
 
-  const onCloseSetScore = () => {
-    setScore({});
-    setIsSetScore(false);
-  }
-  const clearData = () => {
-    setPlayers([]);
-    setHandScores([])
+  const onCloseModal = () => {
     setScore({});
     setIsSetScore(false);
     setAddPlayer(false);
-    setTotalScore({})
+  }
+  const clearData = () => {
+    if (window.confirm('chắc chưa?')) {
+      setPlayers([]);
+      setHandScores([])
+      setScore({});
+      setIsSetScore(false);
+      setAddPlayer(false);
+      setTotalScore({})
+    }
+
   }
   return (
     <div className="App">
       <div className="App-header">
         <div className='menu'>
-          <button onClick={() => setAddPlayer(true)}>Thêm người chơi</button>
-          <button onClick={clearData}>Xóa dữ liệu</button>
+          <button className='button' onClick={() => setAddPlayer(true)}>Thêm người chơi</button>
+          <button className='button' onClick={clearData}>Xóa dữ liệu</button>
         </div>
-        <button onClick={() => setIsSetScore(true)}>Thêm điểm</button>
+        { !!players.length && <button className='button button--float' onClick={() => setIsSetScore(true)}>Thêm điểm</button> }
         <div className="detail">
           <table className='table-score'>
             <thead>
               <tr>
                 {
                   players.map(player => <th key={player}><div>
-                    <div>{totalScore[player]}</div>
+                    <div className='score--total'>{totalScore[player]}</div>
                     <div>{player}</div>
                   </div></th>)
                 }
@@ -112,22 +116,22 @@ function App() {
           </table>
         </div>
       </div>
-      <Popup open={isAddPlayer} modal closeOnDocumentClick={false}>
-        <div>
-          <input ref={inputRef} />
-          <button onClick={addPlayers}>Ok</button>
+      <Popup open={isAddPlayer} modal onClose={onCloseModal}>
+        <div className='modal-container'>
+          <input ref={inputRef} placeholder="vd: huy,thuy,tien..." />
+          <button className='button' onClick={addPlayers}>Ok</button>
         </div>
       </Popup>
-      <Popup open={isSetScore} modal onClose={onCloseSetScore}>
-        <div>
+      <Popup open={isSetScore} modal onClose={onCloseModal}>
+        <div className='modal-container'>
           {
             players.map((player) => {
               return (
-                <InputScore player={player} onChangeValue={(value) => setScorePlayer({ player, value })} />
+                <InputScore key={player} player={player} onChangeValue={(value) => setScorePlayer({ player, value })} />
               )
             })
           }
-          <button onClick={addScores}>Ok</button>
+          <button className='button' onClick={addScores}>Ok</button>
         </div>
       </Popup>
     </div>
